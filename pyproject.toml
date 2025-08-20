@@ -1,0 +1,12 @@
+[project]
+name = "whoop"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.2",
+    "polars>=1.32.3",
+    "requests>=2.32.5",
+    "streamlit>=1.48.1",
+]
