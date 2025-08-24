@@ -4,7 +4,6 @@ import requests
 import os
 import time
 from urllib.parse import urlencode
-from datetime import datetime, timedelta
 
 # Load .env file
 load_dotenv()
@@ -89,7 +88,11 @@ def get_workouts():
 
     try:
         while True:
-            params = {'next_token': next_token} if next_token else {}
+            params = {
+                'start': '2025-07-20T01:00:00.000Z',
+            }
+            if next_token:
+                params['nextToken'] = next_token
             
             response = requests.get(
                 "https://api.prod.whoop.com/developer/v2/activity/workout",
@@ -104,7 +107,7 @@ def get_workouts():
             
             response.raise_for_status()
             data = response.json()
-            
+
             # Extend with workouts from this page
             all_workouts.extend(data.get('records', []))
             
@@ -134,11 +137,6 @@ def refresh():
 
     if 'access_token' in st.session_state:
         with st.spinner("Fetching body measurement...", show_time=True):
-            body_measurement = get_body_measurement()
+            st.session_state.body_measurement = get_body_measurement()
         with st.spinner("Fetching workouts...", show_time=True):
-            workouts = get_workouts()
-        inches = body_measurement['height_meter'] * 39.3701
-        st.write(f"Height: {int(inches // 12)}'{int(inches % 12)}\"")
-        st.write(f"Weight: {round(body_measurement['weight_kilogram']*2.20462, 2)} lbs")
-        st.write(workouts)
-
+            st.session_state.workouts = get_workouts()
