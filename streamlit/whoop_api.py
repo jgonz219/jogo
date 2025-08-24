@@ -5,13 +5,19 @@ import os
 import time
 from urllib.parse import urlencode
 
-# Load .env file
-load_dotenv()
-
-# Configuration
-CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", None)
-CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", None)
-REDIRECT_URI = os.getenv("WHOOP_REDIRECT_URI", "http://localhost:8501")
+# Load environment variables
+# Try Streamlit secrets first (for deployment), then fall back to .env file (for local development)
+try:
+    # Use Streamlit secrets when deployed
+    CLIENT_ID = st.secrets["WHOOP_CLIENT_ID"]
+    CLIENT_SECRET = st.secrets["WHOOP_CLIENT_SECRET"]
+    REDIRECT_URI = st.secrets.get("WHOOP_REDIRECT_URI", "http://localhost:8501")
+except (KeyError, FileNotFoundError):
+    # Fall back to .env file for local development
+    load_dotenv()
+    CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", None)
+    CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", None)
+    REDIRECT_URI = os.getenv("WHOOP_REDIRECT_URI", "http://localhost:8501")
 
 # WHOOP API endpoints
 AUTHORIZE_URL = "https://api.prod.whoop.com/oauth/oauth2/auth"
