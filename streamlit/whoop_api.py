@@ -19,8 +19,6 @@ except (KeyError, FileNotFoundError):
     CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", None)
     REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:8501")
 
-st.write(CLIENT_ID)
-
 # WHOOP API endpoints
 AUTHORIZE_URL = "https://api.prod.whoop.com/oauth/oauth2/auth"
 TOKEN_URL = "https://api.prod.whoop.com/oauth/oauth2/token"
